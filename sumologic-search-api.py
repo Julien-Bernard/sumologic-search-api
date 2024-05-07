@@ -299,9 +299,17 @@ class sumologicSearchQuery(object):
             header_row = [field['name'] for field in self.results_fields]
             writer.writerow(header_row)
 
-            for record in self.all_records:
-                row = [record['map'][field['name']] for field in self.results_fields]
-                writer.writerow(row)
+            if(self.search_type == 'records'):
+                for record in self.all_records:
+                    row = [record['map'][field['name']] for field in self.results_fields]
+                    writer.writerow(row)
+            elif(self.search_type == 'messages'):
+                for message in self.all_messages:
+                    row = [message['map'][field['name']] for field in self.results_fields]
+                    writer.writerow(row)
+            else:
+                logging.critical('Error: "{}" search type not supported!'.format(self.search_type))
+                exit()     
 
 # main
 def main(config_file):
