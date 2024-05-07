@@ -49,6 +49,12 @@ class sumologicSearchQuery(object):
         self.search_byReceiptTime = self.config['sumologic_search']['byReceiptTime']
         self.search_autoParsingMode = self.config['sumologic_search']['autoParsingMode']
 
+        self.debug = self.config['processing']['debug']
+        if(self.debug):
+            logging.getLogger().setLevel(logging.INFO)
+        else:
+            logging.getLogger().setLevel(logging.CRITICAL)
+
         self.search_timeout = self.config['processing']['timeout']
         self.search_batch = self.config['processing']['batch']
 
@@ -299,11 +305,8 @@ class sumologicSearchQuery(object):
 
 # main
 def main(config_file):
-    logging.info('*** Script start ***')
-
     try:
         with open(config_file, 'r') as config:
-            logging.info('Reading configuration file "{}"'.format(config_file))
             config = yaml.safe_load(config)
     except Exception as e:
         logging.critical('Error while loading configuration file: {}'.format(e))
@@ -314,8 +317,6 @@ def main(config_file):
     except Exception as e:
         logging.critical('Error while creating new Sumologic search: {}'.format(e))
         exit()
-
-    logging.info('*** Script end ***')
 
 # main script execution
 if __name__ == '__main__':
